@@ -422,8 +422,8 @@ public class VerLectura extends LocationSyncActivity implements OnClickListener 
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
                         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMARA);
 
-                }else{
-                    captureImage();
+                }else {
+                            captureImage();
                 }
                 return true;
             case R.id.menu_print:
@@ -456,7 +456,14 @@ public class VerLectura extends LocationSyncActivity implements OnClickListener 
         // TODO Auto-generated method stub
         switch (v.getId()) {
             case R.id.btTomarLectura:
-                validarLectura();
+
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)!= PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMARA);
+
+                }else {
+                            validarLectura();
+                }
+
                 break;
         }
     }

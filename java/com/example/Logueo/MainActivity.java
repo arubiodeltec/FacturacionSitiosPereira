@@ -1,14 +1,17 @@
 package com.example.Logueo;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -23,13 +26,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.actsis.fensliq.Tablas_BD;
 import com.example.gestionOrdenes.EjecucionOrdenes;
 import com.example.gestiondeltec.R;
 import com.example.lectura.MyApplication;
 import com.example.location.EnvioDatosExecutor;
 import com.example.location.LocationSyncActivity;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -74,11 +80,12 @@ public class MainActivity extends LocationSyncActivity implements OnClickListene
 	Timer myTimer;
 	boolean inicioEnvio = false, salidaActivity = false;
 
+	@RequiresApi(api = Build.VERSION_CODES.M)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		requestPermmission();
 		etIngresoCodigo = (EditText)findViewById(R.id.etIngresoCodigo);
 		etIngresoCedula = (EditText)findViewById(R.id.etIngresoCedula);
 		etIngresoIdTerminal = (EditText)findViewById(R.id.etIdTerminal);
@@ -94,21 +101,6 @@ public class MainActivity extends LocationSyncActivity implements OnClickListene
 		btnIngresar.setOnClickListener(this);
 		btnBorrar.setOnClickListener(this);
 
-
-
-//			AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
-//			alert.setTitle(getIntent().getExtras().getSerializable("required").toString())
-//					.setPositiveButton("Ingresar", new DialogInterface.OnClickListener() {
-//						@Override
-//						public void onClick(DialogInterface dialogInterface, int i) {
-//							dialogInterface.dismiss();
-//						}
-//					}).setCancelable(false)
-//					.create().show();
-
-//			Snackbar mySnackbar = Snackbar.make(MainActivity.class,
-//					"Credenciales incorrectas", Snackbar.LENGTH_SHORT);
-//			mySnackbar.show();
 
 		manager = new DataBaseManager(this);
 
@@ -133,6 +125,31 @@ public class MainActivity extends LocationSyncActivity implements OnClickListene
 		ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 		batteryStatus = this.registerReceiver(null, ifilter);
 
+	}
+
+	//pedir permisos al ingrersar a la plataforma
+	private final int REQUEST_CODE = 200;
+
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	private void requestPermmission() {
+
+		int permissionLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
+		int permissionStorage = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+		int permissionCamera = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+		int permissionBackground = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+
+		if (permissionLocation!=PackageManager.PERMISSION_GRANTED
+				&& permissionStorage!=PackageManager.PERMISSION_GRANTED
+				&& permissionCamera!=PackageManager.PERMISSION_GRANTED
+				&& permissionBackground!=PackageManager.PERMISSION_GRANTED){
+
+			requestPermissions(new
+					String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+					Manifest.permission.ACCESS_COARSE_LOCATION,
+					Manifest.permission.CAMERA,
+					Manifest.permission.ACCESS_BACKGROUND_LOCATION},REQUEST_CODE);
+
+		}
 	}
 
 	@Override

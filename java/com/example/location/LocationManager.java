@@ -94,13 +94,11 @@ LocationListener {
 
 				ActivityCompat.requestPermissions(activity
 						,
-						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
 						REQUEST_CODE_LOCATION_PERMISSION
 				);
 
 				Log.i("Sin permisos","Pedir permiso");
-
-
 
 			}else{
 				requestUpdates();
@@ -114,17 +112,13 @@ LocationListener {
 					&& ActivityCompat.checkSelfPermission ( mContext.getApplicationContext(),
 					"android.permission.ACCESS_BACKGROUND_LOCATION" )!= PackageManager.PERMISSION_GRANTED) {
 
-				//TODO: realizar peticion de camara
 				ActivityCompat.requestPermissions(activity
 						,
-						new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+						new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},
 						REQUEST_CODE_LOCATION_PERMISSION
 				);
 
-				ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
-						REQUEST_CODE_LOCATION_PERMISSION);
 				Log.i("Sin permisos","Pedir permiso");
-
 
 
 			}else{
